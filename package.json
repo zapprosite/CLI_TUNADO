@@ -1,0 +1,18 @@
+{
+  "name": "ide-zappro",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "codex:plan": "codex exec 'Proponha plano granular de alterações (tarefas ≤ 15 min) com critérios + smokes. Retorne somente Markdown conciso.' || echo '(codex indisponível)'",
+    "codex:patch": "codex exec 'Aplique diffs mínimos com Filesystem MCP, peça aprovação antes de deleções.' || echo '(codex indisponível)'",
+    "codex:pr": "git checkout -b feat/codex-combo || true && git add -A && git commit -m 'feat(combo): codex+mcp devloop (super 2025)' || true && echo 'Abra o PR pelo GitHub UI'",
+    "codex:hc": "node -e \"console.log('rg:',!!process.env.PATH.includes('rg'));\" && echo 'Playwright:' && npx playwright --version || true"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.0",
+    "eslint": "^9.35.0",
+    "prettier": "^3.6.2"
+  }
+}

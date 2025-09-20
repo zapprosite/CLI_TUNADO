@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.DS_Store
+.env*
+.idea/
+.vscode/
+.pnpm-store/
+coverage/
+reports/patches/*.diff
+reports/plan.json
+data/*.db
+.data/
+tmp/

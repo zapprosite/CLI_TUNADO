@@ -1,0 +1,48 @@
+# Codex config (PRO) — workspace only
+# Fonte única: usar este arquivo para sessões com MCPs opcionais (quando habilitados)
+# Observação: alguns MCPs abaixo estão comentados por padrão; habilite conforme necessidade
+
+profile = "2025"
+
+[projects."."]
+trust_level = "trusted"
+
+[mcp_servers.filesystem]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-filesystem", "."]
+
+[mcp_servers.memory]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-memory"]
+
+[mcp_servers.ripgrep]
+command = "npx"
+args = ["-y", "@mcollina/mcp-ripgrep@latest"]
+
+[mcp_servers.playwright]
+command = "npx"
+args = ["-y", "@playwright/mcp@latest"]
+
+## OPCIONAIS (habilitar removendo '#') — confirme os pacotes antes
+
+# [mcp_servers.git]
+# command = "npx"
+# args = ["-y", "mcp-git@latest"]
+
+# [mcp_servers.http]
+# command = "npx"
+# args = ["-y", "mcp-http@latest"]
+
+# [mcp_servers.sqlite]
+# command = "npx"
+# args = ["-y", "mcp-sqlite@latest"]
+
+[profiles.2025]
+model = "gpt-5"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+model_reasoning_effort = "high"
+model_reasoning_summary = "detailed"
+
+[profiles.2025.sandbox_workspace_write]
+network_access = true

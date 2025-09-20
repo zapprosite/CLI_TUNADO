@@ -1,0 +1,23 @@
+{
+  "name": "Codex Combo Dev",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {}
+  },
+  "remoteUser": "node",
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "GitHub.copilot-chat",
+        "eamodio.gitlens",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-vscode-remote.remote-containers",
+        "redhat.vscode-yaml",
+        "yzhang.markdown-all-in-one",
+        "GitHub.vscode-pull-request-github"
+      ]
+    }
+  }
+}

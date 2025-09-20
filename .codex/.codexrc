@@ -1,0 +1,3 @@
+# Usar a configuração do repositório por padrão
+config = ".codex/config.toml"
+

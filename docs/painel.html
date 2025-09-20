@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Painel de Atalhos — Zappro (Set/2025)</title>
+  <style>
+    :root{
+      --bg:#0b0f1a; --bg2:#0e1424; --panel:#0f1629cc; --card:#0f1733cc; --muted:#9aa4b2; --text:#e6edf3;
+      --accent:#6ee7ff; --accent2:#9b8cff; --ok:#48e6a6; --warn:#ffd166; --danger:#ff6b6b;
+      --ring: 0 0 0 1px #5b9dff33, 0 0 30px #5b9dff22, inset 0 0 30px #5b9dff11;
+      --radius:14px; --radius-sm:10px; --radius-lg:20px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      --sans: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+    }
+    html,body{height:100%;}
+    body{
+      margin:0; color:var(--text); font-family:var(--sans);
+      background: radial-gradient(1200px 600px at 80% -10%, #2b2b8a22, transparent 60%),
+                  radial-gradient(900px 500px at 10% -20%, #0aa3bf22, transparent 50%),
+                  linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+    }
+    .wrap{max-width:1200px; margin:0 auto; padding:48px 28px 64px;}
+    header{display:flex; gap:18px; align-items:center; margin-bottom:20px;}
+    .logo{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,#9b8cff,#6ee7ff);box-shadow:0 10px 30px #77c6ff44;}
+    h1{font-size:26px; margin:0 0 4px 0; letter-spacing:.2px}
+    .sub{color:var(--muted); font-size:14px}
+
+    .panel{
+      background: var(--panel); backdrop-filter: blur(10px);
+      border:1px solid #dee7ff14; border-radius: var(--radius);
+      box-shadow: var(--ring);
+      padding:16px; margin-top:10px;
+    }
+    .controls{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+    .search{flex:1 1 420px; position:relative}
+    .search input{
+      width:100%; padding:12px 44px 12px 14px; border-radius:12px; border:1px solid #ffffff1a;
+      background:#0d1327; color:var(--text); outline:none; font-size:14px; box-shadow: inset 0 0 0 1px #00000033;
+    }
+    .search .ico{position:absolute; right:10px; top:50%; transform:translateY(-50%); opacity:.7}
+    .pills{display:flex; gap:8px; flex-wrap:wrap}
+    .pill{padding:8px 12px; border-radius:999px; border:1px solid #ffffff1a; background:#0c1226; color:#c8d3e1;
+      font-size:12px; cursor:pointer; user-select:none}
+    .pill.active{background:linear-gradient(135deg,#1a2145,#12204a); color:#eaf6ff; border-color:#66b3ff55; box-shadow:0 0 0 1px #66b3ff33, inset 0 0 12px #69d1ff1e}
+
+    .vars{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+    .var{display:flex; align-items:center; gap:8px; background:#0c1226; border:1px solid #ffffff1a; border-radius:10px; padding:8px 10px;}
+    .var input{width:160px; padding:8px; border-radius:8px; border:1px solid #ffffff1a; background:#0d1327; color:var(--text); font-family:var(--mono);}
+
+    .grid{display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; margin-top:16px}
+    @media (max-width:1100px){.grid{grid-template-columns: repeat(2,1fr);} }
+    @media (max-width:760px){.grid{grid-template-columns: 1fr;} }
+
+    .card{
+      padding:14px; border-radius: var(--radius-sm); background: var(--card);
+      border:1px solid #dee7ff14; box-shadow: inset 0 0 0 1px #00000033, 0 8px 30px #00000022;
+      display:flex; flex-direction:column; gap:10px;
+      min-height:148px
+    }
+    .head{display:flex; align-items:center; justify-content:space-between; gap:10px}
+    .title{font-weight:600}
+    .tags{display:flex; gap:6px; flex-wrap:wrap}
+    .tag{font-size:11px; color:#a8b3c7; background:#0b1222; border:1px solid #ffffff1a; padding:3px 8px; border-radius:999px}
+    .desc{color:#c8d3e1; font-size:13px; line-height:1.35}
+    .cmd{position:relative; background:#0a1123; border:1px dashed #7ab2ff2f; border-radius:10px; padding:10px 44px 10px 12px; font-family:var(--mono); font-size:12.8px; color:#eaf2ff; word-break:break-all}
+    .copy{position:absolute; right:6px; top:6px; background:#122143; border:1px solid #6ec2ff44; color:#eaf6ff; border-radius:8px; padding:8px 9px; cursor:pointer}
+    .copy:hover{box-shadow:0 0 0 1px #6ec2ff55}
+    .muted{color:var(--muted); font-size:12px}
+    .footer{display:flex; justify-content:space-between; align-items:center}
+    .hint{font-size:12px; color:#b9c5d9}
+    .empty{opacity:.8; text-align:center; padding:40px 12px}
+  </style>
+  <script>
+    const Vars = {
+      APP_PORT: '3300'
+    };
+
+    // Catalogo de comandos (Set/2025)
+    const Commands = [
+      // ——— MAKEFILE ———
+      {cat:'make', key:'make-help', label:'Make: help', cmd:'make help', desc:'Lista todos os atalhos disponíveis no Makefile.', tags:['make','help','atalhos']},
+
+      {cat:'make', key:'app-fg', label:'App: start (foreground)', cmd:'APP_PORT={{APP_PORT}} make app', desc:'Sobe hello-app em foreground. CTRL+C para parar.', tags:['app','node','local']},
+      {cat:'make', key:'app-bg', label:'App: start (background)', cmd:'APP_PORT={{APP_PORT}} make app-bg', desc:'Inicia hello-app em background e salva PID/log.', tags:['app','bg','pid']},
+      {cat:'make', key:'app-stop', label:'App: stop (bg)', cmd:'make app-stop', desc:'Interrompe o processo em background (se existir).', tags:['app']},
+      {cat:'make', key:'app-log', label:'App: logs', cmd:'make app-log', desc:'Segue últimas linhas do log de hello-app.', tags:['logs']},
+
+      {cat:'make', key:'live-fg', label:'Live reload: start', cmd:'APP_PORT={{APP_PORT}} make live', desc:'Sobe com node --watch (auto-reload).', tags:['live','watch']},
+      {cat:'make', key:'live-bg', label:'Live reload: start (bg)', cmd:'APP_PORT={{APP_PORT}} make live-bg', desc:'Live server em background (PID/logs dedicados).', tags:['live','bg']},
+      {cat:'make', key:'live-stop', label:'Live reload: stop', cmd:'make live-stop', desc:'Interrompe o live server (se existir).', tags:['live']},
+      {cat:'make', key:'live-log', label:'Live reload: logs', cmd:'make live-log', desc:'Segue logs do live server.', tags:['live','logs']},
+
+      
+
+      {cat:'make', key:'codex-mcp', label:'Codex: listar MCPs', cmd:'make codex-mcp', desc:'Lista MCPs do workspace (.codex/config.toml).', tags:['codex','mcp']},
+      {cat:'make', key:'codex-mcp-pro', label:'Codex: listar MCPs (PRO)', cmd:'make codex-mcp-pro', desc:'Lista MCPs do config PRO (.codex/config.pro.toml).', tags:['codex','mcp','pro']},
+      {cat:'make', key:'codex-smoke', label:'Codex: smoke Playwright', cmd:'APP_PORT={{APP_PORT}} make codex-smoke', desc:'Abre / e retorna TITLE/URL via Playwright MCP.', tags:['codex','playwright']},
+      {cat:'make', key:'codex-plan', label:'Codex: plano granular', cmd:'make codex-plan', desc:'Gera plano de trabalho (tarefas ≤ 15 min).', tags:['codex']},
+      {cat:'make', key:'codex-patch', label:'Codex: aplicar diffs', cmd:'make codex-patch', desc:'Aplica patches mínimos com aprovação.', tags:['codex']},
+      {cat:'make', key:'codex-pr', label:'Codex: branch/commit PR', cmd:'make codex-pr', desc:'Cria branch, commit e orienta abrir PR.', tags:['codex','git']},
+      
+
+      {cat:'make', key:'sanity', label:'Sanity: checagens rápidas', cmd:'make sanity', desc:'Node/npm, app /healthz, MCPs e code --version.', tags:['sanity']},
+      {cat:'make', key:'code-open', label:'VS Code: abrir workspace', cmd:'make code-open', desc:'Abre a pasta atual no VS Code.', tags:['vscode']},
+      {cat:'make', key:'code-list', label:'VS Code: listar extensões (direto)', cmd:'make code-list', desc:'Lista extensões via code CLI (direto).', tags:['vscode']},
+
+      
+
+      // ——— CURADOS (frequentes Set/2025) ———
+      {cat:'git', key:'git-status', label:'Git: status curto', cmd:'git status -sb', desc:'Estado do working tree (branch/porcelain).', tags:['git']},
+      {cat:'git', key:'git-new-branch', label:'Git: nova branch', cmd:'git switch -c feat/minha-branch', desc:'Cria e troca para nova branch.', tags:['git']},
+      {cat:'git', key:'git-commit', label:'Git: add + commit', cmd:'git add -A && git commit -m "feat: mensagem"', desc:'Adiciona tudo e cria commit.', tags:['git']},
+      {cat:'git', key:'git-rebase-pull', label:'Git: atualizar contra main (rebase)', cmd:'git fetch origin && git rebase origin/main', desc:'Mantém histórico linear.', tags:['git']},
+      {cat:'git', key:'git-push', label:'Git: push branch atual', cmd:'git push -u origin HEAD', desc:'Cria upstream para a branch atual.', tags:['git']},
+      {cat:'git', key:'git-graph', label:'Git: log compacto', cmd:'git log --oneline --decorate --graph -n 15', desc:'Resumo visual dos últimos commits.', tags:['git']},
+
+      {cat:'vscode', key:'vscode-open', label:'VS Code: abrir pasta', cmd:'code .', desc:'Abre a pasta atual no VS Code Desktop.', tags:['vscode']},
+      {cat:'vscode', key:'vscode-install-ext', label:'VS Code: instalar extensão', cmd:'code --install-extension publisher.id', desc:'Instala uma extensão por ID.', tags:['vscode']},
+      {cat:'vscode', key:'vscode-list-ext', label:'VS Code: listar extensões', cmd:'code --list-extensions | sort', desc:'Lista extensões instaladas (ordenadas).', tags:['vscode']},
+      {cat:'vscode', key:'vscode-devcontainers', label:'Dev Containers: Reopen in Container', cmd:'Abra o Palette (F1) e execute: Dev Containers: Reopen in Container', desc:'Reabre a pasta no Dev Container.', tags:['devcontainer','vscode']},
+
+      {cat:'codex', key:'codex-mcp-direct', label:'Codex: listar MCPs (direto)', cmd:'codex -C ./.codex/config.toml --skip-git-repo-check exec "/mcp"', desc:'Lista MCPs do workspace explicitamente.', tags:['codex','mcp']},
+      {cat:'codex', key:'codex-orq', label:'Codex: Orquestrador (full-auto)', cmd:'TASK="Validar sanity e sugerir próximos passos" make codex-orq', desc:'Executa orquestrador com prompt do repo.', tags:['codex','orq','full-auto']},
+      {cat:'codex', key:'codex-orq-nightly', label:'Codex: Orquestrador Nightly', cmd:'make codex-orq-nightly', desc:'Cria branch, roda full-auto e salva logs (notifica se configurado).', tags:['codex','orq','nightly']},
+      {cat:'codex', key:'codex-orq-target', label:'Orquestrador em outro repo', cmd:'TARGET=../meu-repo make codex-orq-target', desc:'Roda full-auto no repo alvo (sincroniza .codex via symlink).', tags:['codex','orq','target']},
+      {cat:'codex', key:'codex-orq-nightly-target', label:'Nightly em outro repo', cmd:'TARGET=../meu-repo make codex-orq-nightly-target', desc:'Cria branch no alvo, roda full-auto e salva logs + notifica.', tags:['codex','orq','nightly','target']},
+      {cat:'make', key:'notify-test', label:'Notificação: teste (Slack/Discord)', cmd:'make notify-test', desc:'Envia mensagem de teste usando webhooks do .env.', tags:['notify','slack','discord']},
+      {cat:'codex', key:'codex-plan-cli', label:'Codex: plano (direto)', cmd:'codex exec "Proponha plano granular de alterações (tarefas ≤ 15 min) com critérios + smokes. Retorne somente Markdown conciso."', desc:'Plano sem npm script.', tags:['codex']},
+
+
+      {cat:'rg', key:'rg-grep', label:'Ripgrep: buscar texto', cmd:'rg -n "termo" -S', desc:'Busca recursiva com números de linha e smart-case.', tags:['ripgrep','busca']},
+      {cat:'rg', key:'rg-files', label:'Ripgrep: listar arquivos', cmd:"rg --files -n --hidden -g '!.git'", desc:'Lista arquivos respeitando .rgignore.', tags:['ripgrep','files']},
+
+      // ——— OUTRO REPO (MEMÓRIA) ———
+      
+      {cat:'outro', key:'mcp-global', label:'Outro repo: MCPs (global cfg)', cmd:'codex mcp list', desc:'Em outro repo, rode este comando a partir da raiz.', tags:['outro','codex','mcp']},
+      {cat:'outro', key:'cfg-symlink', label:'Outro repo: symlink .codex', cmd:'ln -s /data/ide-zappro/.codex ./.codex', desc:'Cria link simbólico para reaproveitar a config.', tags:['outro','link']},
+      {cat:'outro', key:'cfg-copy', label:'Outro repo: copiar cfg', cmd:'mkdir -p ./.codex && cp /data/ide-zappro/.codex/config.toml ./.codex/config.toml', desc:'Copia a config para o outro repo.', tags:['outro','copy']},
+    ];
+
+    const CATS = [
+      {id:'all', label:'Todas'},
+      {id:'make', label:'Makefile'},
+      {id:'codex', label:'Codex'},
+      {id:'assistant', label:'Assistant'},
+      {id:'vscode', label:'VS Code'},
+      {id:'git', label:'Git'},
+      {id:'rg', label:'Ripgrep'},
+      {id:'outro', label:'Outro Repo'},
+    ];
+
+    function tpl(str){
+      return str
+        .replaceAll('{{APP_PORT}}', Vars.APP_PORT);
+    }
+
+    function copy(text){
+      const t = tpl(text);
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(t).then(()=> okFlash('Copiado!')).catch(()=> fallback(t));
+      } else { fallback(t); }
+      function fallback(v){
+        const ta=document.createElement('textarea'); ta.value=v; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy'); okFlash('Copiado!')}catch{}; document.body.removeChild(ta);
+      }
+    }
+    function okFlash(msg){
+      const n=document.createElement('div'); n.textContent=msg; Object.assign(n.style,{
+        position:'fixed', right:'16px', bottom:'16px', background:'#122143', color:'#eaf6ff',
+        border:'1px solid #6ec2ff55', borderRadius:'10px', padding:'10px 12px', zIndex:9999
+      }); document.body.appendChild(n); setTimeout(()=>n.remove(),1200);
+    }
+
+    let activeCat = localStorage.getItem('painel.cat') || 'all';
+    let query = '';
+
+    function render(){
+      const list = document.getElementById('list');
+      list.innerHTML='';
+      const filtered = Commands.filter(c=>{
+        const matchCat = (activeCat==='all') || (c.cat===activeCat);
+        const q = query.trim().toLowerCase();
+        const matchQ = !q || [c.label, c.desc, c.cmd, (c.tags||[]).join(' ')].join(' ').toLowerCase().includes(q);
+        return matchCat && matchQ;
+      });
+      if (!filtered.length){ list.innerHTML = '<div class="empty">Nenhum comando encontrado.</div>'; return; }
+      for (const c of filtered){
+        const card = document.createElement('div'); card.className='card';
+        card.innerHTML = `
+          <div class="head">
+            <div class="title">${c.label}</div>
+            <div class="tags">
+              <span class="tag">${c.cat}</span>
+              ${(c.tags||[]).slice(0,3).map(t=>`<span class='tag'>${t}</span>`).join('')}
+            </div>
+          </div>
+          <div class="desc">${c.desc||''}</div>
+          <div class="cmd"><code>${tpl(c.cmd).replaceAll('<','&lt;').replaceAll('>','&gt;')}</code>
+            <button class="copy" aria-label="Copiar" title="Copiar" data-cmd="${encodeURIComponent(c.cmd)}">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 9H15C16.1046 9 17 9.89543 17 11V17C17 18.1046 16.1046 19 15 19H9C7.89543 19 7 18.1046 7 17V11C7 9.89543 7.89543 9 9 9Z" stroke="#a6d7ff" stroke-width="1.5"/>
+                <path d="M7 13V9C7 7.89543 7.89543 7 9 7H13" stroke="#a6d7ff" stroke-width="1.5"/>
+              </svg>
+            </button>
+          </div>
+        `;
+        list.appendChild(card);
+      }
+      // bind copy buttons
+      list.querySelectorAll('.copy').forEach(b=>{
+        b.addEventListener('click', e=>{
+          const raw = decodeURIComponent(e.currentTarget.getAttribute('data-cmd'));
+          copy(raw);
+        });
+      });
+    }
+
+    function renderCats(){
+      const bar = document.getElementById('cats'); bar.innerHTML='';
+      for (const c of CATS){
+        const btn=document.createElement('div'); btn.className='pill'+(activeCat===c.id?' active':''); btn.textContent=c.label; btn.setAttribute('data-id', c.id);
+        btn.addEventListener('click', ()=>{ activeCat=c.id; localStorage.setItem('painel.cat', activeCat); renderCats(); render(); });
+        bar.appendChild(btn);
+      }
+    }
+
+    function bindVars(){
+      const ids=['APP_PORT'];
+      for (const id of ids){
+        const el=document.getElementById('v_'+id);
+        el.value = Vars[id];
+        el.addEventListener('input', e=>{ Vars[id]=e.target.value; render(); });
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', ()=>{
+      renderCats();
+      bindVars();
+      document.getElementById('q').addEventListener('input', e=>{ query=e.target.value; render(); });
+      render();
+    });
+  </script>
+  <meta name="color-scheme" content="dark">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data:">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22%236ee7ff%22/></svg>">
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>Painel de Atalhos — Setembro/2025</h1>
+        <div class="sub">Makefile + Comandos frequentes (desktop), com copiar em um clique</div>
+      </div>
+    </header>
+
+    <div class="panel">
+      <div class="controls">
+        <div class="search">
+          <input id="q" placeholder="Buscar por nome, comando ou tag (ex.: mcp, logs)" />
+          <div class="ico">🔎</div>
+        </div>
+        <div id="cats" class="pills" role="tablist" aria-label="Categorias"></div>
+      </div>
+      <div class="vars" aria-label="Variáveis usadas nos comandos">
+        <div class="var">APP_PORT <input id="v_APP_PORT" /></div>
+        
+      </div>
+
+      <div id="list" class="grid" aria-live="polite"></div>
+      <div class="footer" style="margin-top:14px">
+        <div class="hint">Dica: personalize variáveis. Em outro repo, use os cartões "Outro Repo" (MCPs e opções de config).</div>
+        <div class="muted">Zappro • DevLoop 2025</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+      // ——— ASSISTANT ———
+      {cat:'assistant', key:'assistant-check', label:'Assistant: Check', cmd:'make assistant-check', desc:'Diagnóstico de Python/STT/TTS/LLM e env.', tags:['assistant']},
+      {cat:'assistant', key:'assistant-dev', label:'Assistant: Start (texto)', cmd:'make assistant-dev', desc:'Inicia assistant em modo CLI (texto).', tags:['assistant']},
+      // ——— API / WEB ———
+      {cat:'make', key:'api-fg', label:'API: start (dev)', cmd:'make api', desc:'Sobe API (Fastify TS) com watch (tsx).', tags:['api']},
+      {cat:'make', key:'api-bg', label:'API: start (bg)', cmd:'make api-bg', desc:'Inicia API em background e salva PID/log.', tags:['api','bg']},
+      {cat:'make', key:'api-stop', label:'API: stop (bg)', cmd:'make api-stop', desc:'Interrompe a API em background.', tags:['api']},
+      {cat:'make', key:'api-log', label:'API: logs', cmd:'make api-log', desc:'Segue logs da API.', tags:['api','logs']},
+
+      {cat:'make', key:'web-fg', label:'WEB: start (dev)', cmd:'make web', desc:'Sobe Vite React TS (porta 5173).', tags:['web']},
+      {cat:'make', key:'web-bg', label:'WEB: start (bg)', cmd:'make web-bg', desc:'Inicia WEB em background e salva PID/log.', tags:['web','bg']},
+      {cat:'make', key:'web-stop', label:'WEB: stop (bg)', cmd:'make web-stop', desc:'Interrompe o WEB em background.', tags:['web']},
+      {cat:'make', key:'web-log', label:'WEB: logs', cmd:'make web-log', desc:'Segue logs do WEB.', tags:['web','logs']},
