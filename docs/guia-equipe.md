@@ -15,9 +15,9 @@ Este guia resume como usar o DevLoop “Replit‑like” deste repositório, com
 - Node 20+, Git e VS Code.
 - Opcional: Codex CLI (para MCPs), Playwright instalado (o DevContainer instala os browsers best‑effort).
 
-## Comece em 3 passos
-1) VS Code: abra a pasta do repo. Se possível, use Dev Container (`Rebuild and Reopen in Container`).
-2) Hello app: `make app` e teste `curl http://localhost:3300/healthz`.
+## Comece em 3 passos (CLI_TUNADO)
+1) VS Code: abra a pasta `CLI_TUNADO`. Se puder, use DevContainer (Rebuild and Reopen in Container).
+2) Hello (3300): `make app` e teste `curl http://localhost:3300/healthz`.
 3) Painel: abra `docs/painel.html` para atalhos rápidos.
 
 ## Fluxos comuns
@@ -33,12 +33,14 @@ Este guia resume como usar o DevLoop “Replit‑like” deste repositório, com
   - Listar MCPs: `make codex-mcp`.
   - Smoke web com Playwright MCP: `make codex-smoke APP_PORT=3300`.
 
-## Assistant (opcional)
-- Diagnóstico: `make assistant-check`.
-- Iniciar (texto): `make assistant-dev`.
-- Ativar STT (Vosk): `make assistant-stt-enable && make assistant-install-stt`.
-- Ativar TTS (Piper): `make assistant-tts-enable && make assistant-install-tts`.
-- DevContainer com áudio (Ubuntu): use `.devcontainer.assistant/`.
+## Assistant (repo separado)
+- Repositório: https://github.com/zapprosite/Ubuntu_Alexa
+- Local: `/data/Ubuntu_Alexa` (ou clone onde preferir)
+- Comandos:
+  - `make install` — cria `.venv` e instala dependências
+  - `make assistant-check` — diagnóstico de ambiente/pacotes/env
+  - `make assistant-dev` — inicia o assistant em modo texto
+  - STT/TTS opcionais via `config/assistant.yaml`
 
 ## Notificações (opcional)
 - Configure webhooks no `.env` (copie de `.env.example`).
@@ -51,8 +53,8 @@ Este guia resume como usar o DevLoop “Replit‑like” deste repositório, com
 
 ---
 
-## Separar em 2 repositórios e publicar no GitHub
-Objetivo: extrair o Assistant para um repositório próprio e manter o DevLoop (hello/api/web) em outro. Abaixo, opções por nível de preservação de histórico.
+## (Histórico) Como foi separado em 2 repositórios
+O assistant foi extraído via `git subtree split` para manter histórico, e os dois repos foram publicados no GitHub. Use este procedimento apenas como referência futura.
 
 Nomes sugeridos
 - DevLoop: `zappro-devloop`
@@ -135,4 +137,3 @@ O repositório do Assistant você cria pela Opção A (subtree) ou com `git filt
   - Ajustar README e, se quiser, mover somente o necessário do Makefile.
 
 Dica: mantenha ambos os READMEs com “Como rodar agora”, “Sanidade”, “MCPs/Dependências” e links cruzados.
-
