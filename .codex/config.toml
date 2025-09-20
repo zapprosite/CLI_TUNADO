@@ -21,6 +21,10 @@ args = ["-y", "@mcollina/mcp-ripgrep@latest"]
 command = "npx"
 args = ["-y", "@playwright/mcp@latest"]
 
+[mcp_servers.http]
+command = "npx"
+args = ["-y", "mcp-http@latest"]
+
 ## keep it lean — only essentials for edit/run
 
 [profiles.2025]

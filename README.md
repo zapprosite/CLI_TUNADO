@@ -17,6 +17,9 @@ Observação: o Assistant (voz/áudio) foi separado do DevLoop principal — é 
 - DevContainer: “Rebuild and Reopen in Container” → `node -v && npm -v`
 - Painel de Atalhos (desktop): abra `docs/painel.html`
 - Tutorial da equipe (passo a passo): `docs/guia-equipe.md`
+ - Tokens e integrações (GitHub/Slack/Discord): `docs/links-tokens.md`
+ - Guia do .env (BR): `docs/guia-env-br.md`
+- Auto (inspirado em Agent): `make auto` (sobe hello+api+web e faz checks)
 - Codex (repo): listar MCPs → `codex -C ./.codex/config.toml exec --skip-git-repo-check "/mcp"`
 - Start app: `make app` e abra http://localhost:3300
 - Full‑stack v2: `make dev` (hello 3300, api 3400, web 5173)

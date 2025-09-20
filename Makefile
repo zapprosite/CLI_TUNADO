@@ -150,6 +150,15 @@ sanity: ## Verificações: Node/npm e app /healthz
 	curl -sSf http://localhost:$(APP_PORT)/healthz || true; echo; \
 	kill $$(cat $(PID_FILE)) 2>/dev/null || true; rm -f $(PID_FILE)
 
+.PHONY: context7-smoke
+context7-smoke: ## Testa Context7 via HTTP MCP (requer CONTEXT7_BASE_URL/KEY no .env)
+	@set -e; \
+	set -a; [ -f .env ] && . ./.env || true; set +a; \
+	if [ -z "$${CONTEXT7_BASE_URL:-}" ] || [ -z "$${CONTEXT7_API_KEY:-}" ]; then \
+		echo "[context7] Defina CONTEXT7_BASE_URL e CONTEXT7_API_KEY no .env"; exit 1; \
+	fi; \
+	codex -C ./.codex/config.toml exec --skip-git-repo-check "Using HTTP MCP only: perform a GET to $${CONTEXT7_BASE_URL} with header Authorization: Bearer $${CONTEXT7_API_KEY}. Return a single line: STATUS=<status_code>" || true
+
 # ============ Assistant (voz/IA) ============
 .PHONY: assistant-check assistant-dev assistant-venv
 ASSIST_DIR=agents/assistant
@@ -190,3 +199,41 @@ code-open: ## Abre o workspace no VS Code
 
 # ============ Observability (OSS opcional) ============
 # (Observability removida — foco lean)
+
+# ============ API utilities (setup/migrate/reset) ============
+.PHONY: api-setup api-migrate api-db-reset
+api-setup: ## Instala deps da API e prepara banco (SQLite via Prisma)
+	cd apps/api && npm install && npm run prisma:generate && DATABASE_URL=file:./prisma/dev.db npm run prisma:migrate || true
+
+api-migrate: ## Executa migrações Prisma (SQLite)
+	cd apps/api && DATABASE_URL=file:./prisma/dev.db npm run prisma:migrate
+
+api-db-reset: ## Reseta DB local (DANGER: apaga dados locais)
+	cd apps/api && DATABASE_URL=file:./prisma/dev.db npm run db:reset
+
+# ============ Web preview (build + preview) ============
+.PHONY: web-preview-bg web-preview-stop web-preview-log
+WEB_PREVIEW_PORT ?= 5174
+web-preview-bg: ## Sobe o web em modo preview (build + preview) em background
+	cd apps/web && npm install && npm run build && npm run preview -- --port $(WEB_PREVIEW_PORT) > /tmp/web-preview.log 2>&1 & echo $$! > /tmp/web-preview.pid; \
+	echo "[web-preview] PID=$$(cat /tmp/web-preview.pid) log=/tmp/web-preview.log port=$(WEB_PREVIEW_PORT)"
+
+web-preview-stop: ## Para o preview do web (bg)
+	@[ -f /tmp/web-preview.pid ] && kill $$(cat /tmp/web-preview.pid) 2>/dev/null && rm -f /tmp/web-preview.pid && echo "[web-preview] stopped" || echo "[web-preview] not running"
+
+web-preview-log: ## Logs do preview do web
+	@tail -n 50 -f /tmp/web-preview.log || true
+
+# ============ Auto (inspirado em Agent) ============
+.PHONY: auto auto-stop auto-log
+auto: ## Orquestra hello+api+web com checks automáticos
+	bash scripts/auto.sh
+
+auto-stop: ## Para todos os serviços de bg (hello/api/web)
+	$(MAKE) kill-all
+
+auto-log: ## Mostra logs recentes (hello/api/web)
+	@echo '--- hello-app.log' && tail -n 50 /tmp/hello-app.log 2>/dev/null || true; \
+	 echo '\n--- api.log' && tail -n 50 /tmp/api.log 2>/dev/null || true; \
+	 echo '\n--- web.log' && tail -n 50 /tmp/web.log 2>/dev/null || true; \
+	 echo '\n--- web-preview.log' && tail -n 50 /tmp/web-preview.log 2>/dev/null || true
