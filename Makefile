@@ -152,20 +152,33 @@ sanity: ## Verificações: Node/npm e app /healthz
 
 # ============ Assistant (voz/IA) ============
 .PHONY: assistant-check assistant-dev assistant-venv
-ASSIST_VENV=agents/assistant/.venv
+ASSIST_DIR=agents/assistant
+ASSIST_VENV=$(ASSIST_DIR)/.venv
 
 assistant-venv:
+	@if [ ! -d "$(ASSIST_DIR)" ]; then \
+		echo "[assistant] movido para repo separado: https://github.com/zapprosite/Ubuntu_Alexa"; \
+		exit 0; \
+	fi
 	@test -d $(ASSIST_VENV) || python3 -m venv $(ASSIST_VENV)
 	@$(ASSIST_VENV)/bin/python -m pip install --upgrade pip >/dev/null 2>&1 || true
-	@test -f agents/assistant/requirements.txt && $(ASSIST_VENV)/bin/pip install -r agents/assistant/requirements.txt >/dev/null 2>&1 || true
+	@test -f $(ASSIST_DIR)/requirements.txt && $(ASSIST_VENV)/bin/pip install -r $(ASSIST_DIR)/requirements.txt >/dev/null 2>&1 || true
 
 assistant-check: ## Diagnóstico do assistant (versões e variáveis)
+	@if [ ! -d "$(ASSIST_DIR)" ]; then \
+		echo "[assistant] repo separado: use Ubuntu_Alexa (link no README)"; \
+		exit 0; \
+	fi
 	$(MAKE) assistant-venv >/dev/null 2>&1 || true
-	@$(ASSIST_VENV)/bin/python agents/assistant/check.py || true
+	@$(ASSIST_VENV)/bin/python $(ASSIST_DIR)/check.py || true
 
 assistant-dev: ## Inicia o assistant em modo CLI (texto)
+	@if [ ! -d "$(ASSIST_DIR)" ]; then \
+		echo "[assistant] repo separado: https://github.com/zapprosite/Ubuntu_Alexa"; \
+		exit 0; \
+	fi
 	$(MAKE) assistant-venv >/dev/null 2>&1 || true
-	@$(ASSIST_VENV)/bin/python agents/assistant/assistant.py
+	@$(ASSIST_VENV)/bin/python $(ASSIST_DIR)/assistant.py
 
 # ============ VS Code ============
 .PHONY: code-list code-open
