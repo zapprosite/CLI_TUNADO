@@ -2,6 +2,12 @@
 
 Este arquivo registra decisões relevantes do projeto (DX, padrões, tooling) para dar contexto futuro.
 
+## 2025-09-20 — Poda segura (vestígios na raiz)
+- Decisão: mover itens não-essenciais/vestigiais da raiz para `archive/20250920-poda/` (sem deleções), mantendo apenas o devloop mínimo (hello-app), full‑stack em `apps/` (api/web), MCPs e Assistant.
+- Itens movidos: `infra/`, `observability/`, `reports/`, `src/` (vazio) e `sys` (arquivo grande).
+- Sanidade revalidada: `make sanity` OK após a poda.
+- Próximo: manter Prompt de Poda seguro no repo (`prompts/poda-segura-voz.md`) e alinhar voice assistant (Ubuntu, mic) com STT/TTS opcionais.
+
 ## 2025-09-19 — Poda segura e unificação de MCPs
 - Decisão: MCPs definidos apenas no workspace `.codex/config.toml` (fonte única). `codex mcp list` pode não refletir MCPs do workspace; usamos `codex -C ./.codex/config.toml exec "/mcp"` para listar.
 - Poda: itens vazios/non-essenciais movidos para `archive/20250919-poda/` (sem deleções).

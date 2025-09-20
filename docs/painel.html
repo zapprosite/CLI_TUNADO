@@ -91,6 +91,17 @@
       {cat:'make', key:'live-stop', label:'Live reload: stop', cmd:'make live-stop', desc:'Interrompe o live server (se existir).', tags:['live']},
       {cat:'make', key:'live-log', label:'Live reload: logs', cmd:'make live-log', desc:'Segue logs do live server.', tags:['live','logs']},
 
+      // ——— API / WEB ———
+      {cat:'make', key:'api-fg', label:'API: start (dev)', cmd:'make api', desc:'Sobe API (Fastify TS) com watch (tsx).', tags:['api']},
+      {cat:'make', key:'api-bg', label:'API: start (bg)', cmd:'make api-bg', desc:'Inicia API em background e salva PID/log.', tags:['api','bg']},
+      {cat:'make', key:'api-stop', label:'API: stop (bg)', cmd:'make api-stop', desc:'Interrompe a API em background.', tags:['api']},
+      {cat:'make', key:'api-log', label:'API: logs', cmd:'make api-log', desc:'Segue logs da API.', tags:['api','logs']},
+
+      {cat:'make', key:'web-fg', label:'WEB: start (dev)', cmd:'make web', desc:'Sobe Vite React TS (porta 5173).', tags:['web']},
+      {cat:'make', key:'web-bg', label:'WEB: start (bg)', cmd:'make web-bg', desc:'Inicia WEB em background e salva PID/log.', tags:['web','bg']},
+      {cat:'make', key:'web-stop', label:'WEB: stop (bg)', cmd:'make web-stop', desc:'Interrompe o WEB em background.', tags:['web']},
+      {cat:'make', key:'web-log', label:'WEB: logs', cmd:'make web-log', desc:'Segue logs do WEB.', tags:['web','logs']},
+
       
 
       {cat:'make', key:'codex-mcp', label:'Codex: listar MCPs', cmd:'make codex-mcp', desc:'Lista MCPs do workspace (.codex/config.toml).', tags:['codex','mcp']},
@@ -104,6 +115,9 @@
       {cat:'make', key:'sanity', label:'Sanity: checagens rápidas', cmd:'make sanity', desc:'Node/npm, app /healthz, MCPs e code --version.', tags:['sanity']},
       {cat:'make', key:'code-open', label:'VS Code: abrir workspace', cmd:'make code-open', desc:'Abre a pasta atual no VS Code.', tags:['vscode']},
       {cat:'make', key:'code-list', label:'VS Code: listar extensões (direto)', cmd:'make code-list', desc:'Lista extensões via code CLI (direto).', tags:['vscode']},
+      {cat:'make', key:'code-hc', label:'VS Code: healthcheck', cmd:'make code-hc', desc:'Mostra onde o code está mapeado e versão.', tags:['vscode','hc']},
+      {cat:'vscode', key:'code-install-claude', label:'VS Code: instalar Claude Code', cmd:'make code-install-claude', desc:'Instala a extensão oficial (Anthropic).', tags:['vscode','claude']},
+      {cat:'vscode', key:'code-install-pack', label:'VS Code: instalar pack padrão', cmd:'make code-install-pack', desc:'Claude + ESLint + Prettier + YAML + GitLens + PR + DevContainers.', tags:['vscode','pack']},
 
       
 
@@ -143,7 +157,6 @@
       {id:'all', label:'Todas'},
       {id:'make', label:'Makefile'},
       {id:'codex', label:'Codex'},
-      {id:'assistant', label:'Assistant'},
       {id:'vscode', label:'VS Code'},
       {id:'git', label:'Git'},
       {id:'rg', label:'Ripgrep'},
@@ -274,18 +287,5 @@
       </div>
     </div>
   </div>
-</body>
-</html>
-      // ——— ASSISTANT ———
-      {cat:'assistant', key:'assistant-check', label:'Assistant: Check', cmd:'make assistant-check', desc:'Diagnóstico de Python/STT/TTS/LLM e env.', tags:['assistant']},
-      {cat:'assistant', key:'assistant-dev', label:'Assistant: Start (texto)', cmd:'make assistant-dev', desc:'Inicia assistant em modo CLI (texto).', tags:['assistant']},
-      // ——— API / WEB ———
-      {cat:'make', key:'api-fg', label:'API: start (dev)', cmd:'make api', desc:'Sobe API (Fastify TS) com watch (tsx).', tags:['api']},
-      {cat:'make', key:'api-bg', label:'API: start (bg)', cmd:'make api-bg', desc:'Inicia API em background e salva PID/log.', tags:['api','bg']},
-      {cat:'make', key:'api-stop', label:'API: stop (bg)', cmd:'make api-stop', desc:'Interrompe a API em background.', tags:['api']},
-      {cat:'make', key:'api-log', label:'API: logs', cmd:'make api-log', desc:'Segue logs da API.', tags:['api','logs']},
-
-      {cat:'make', key:'web-fg', label:'WEB: start (dev)', cmd:'make web', desc:'Sobe Vite React TS (porta 5173).', tags:['web']},
-      {cat:'make', key:'web-bg', label:'WEB: start (bg)', cmd:'make web-bg', desc:'Inicia WEB em background e salva PID/log.', tags:['web','bg']},
-      {cat:'make', key:'web-stop', label:'WEB: stop (bg)', cmd:'make web-stop', desc:'Interrompe o WEB em background.', tags:['web']},
-      {cat:'make', key:'web-log', label:'WEB: logs', cmd:'make web-log', desc:'Segue logs do WEB.', tags:['web','logs']},
+ </body>
+ </html>

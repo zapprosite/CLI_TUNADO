@@ -1,10 +1,12 @@
 # Zappro — DevLoop mínimo (Replit‑like + Agent) — Set/2025
 
 Stack enxuta para “codar como Replit” no VS Code, com Codex CLI + MCP essenciais. Sem infra, sem observability, sem CI/CD — foco em editar/rodar rápido.
+Observação: o Assistant (voz/áudio) foi separado do DevLoop principal — é opcional.
 
 ## Pastas
 - `apps/hello-app`: app mínimo Node com `/` e `/healthz`
 - `docs/`: painel local (desktop) em `docs/painel.html`
+  - Opcional (Assistant): `docs/painel_assistant.html`
 - `.devcontainer/` e `.vscode/`: ambiente editor padronizado
 
 ## Requisitos
@@ -14,8 +16,12 @@ Stack enxuta para “codar como Replit” no VS Code, com Codex CLI + MCP essenc
 - VS Code: `code /data/ide-zappro`
 - DevContainer: “Rebuild and Reopen in Container” → `node -v && npm -v`
 - Painel de Atalhos (desktop): abra `docs/painel.html`
+- Tutorial da equipe (passo a passo): `docs/guia-equipe.md`
 - Codex (repo): listar MCPs → `codex -C ./.codex/config.toml exec --skip-git-repo-check "/mcp"`
 - Start app: `make app` e abra http://localhost:3300
+- Full‑stack v2: `make dev` (hello 3300, api 3400, web 5173)
+- Sanidade profunda: `make sanity-deep`
+ - VS Code (Claude Code): instale com `make code-install-claude` (ou pack `make code-install-pack`)
 ## Notificações (Slack/Discord)
 - Configure webhooks no `.env` (copie de `.env.example`).
 - Teste: `make notify-test`.
@@ -30,6 +36,8 @@ Stack enxuta para “codar como Replit” no VS Code, com Codex CLI + MCP essenc
 ## Fluxo recomendado
 1) Abra o DevContainer (ou Node 20 no host)
 2) Edite e rode o app: `make app` (ou `make live`)
+   - API v2 (SQLite/Prisma): `make api-setup` e `make api`
+   - Web: `cd apps/web && cp .env.local.example .env.local` (ajuste `VITE_API_URL=http://localhost:3400` se necessário)
 3) Use o painel `docs/painel.html` para atalhos e copiar comandos
 4) Opcional: use Codex CLI com MCPs do repo (`/mcp`)
 
@@ -45,6 +53,7 @@ Stack enxuta para “codar como Replit” no VS Code, com Codex CLI + MCP essenc
 ## VS Code (RTX 4090, GPU ON) — extensões e configurações
 - Como abrir (aceleração de GPU): `code /data/ide-zappro` (atalho aponta para `code-accel` com console seguro).
 - Extensões recomendadas (leves):
+  - Claude Code (oficial): `anthropic.claude-dev`
   - Qualidade: `dbaeumer.vscode-eslint`, `esbenp.prettier-vscode`, `yzhang.markdown-all-in-one`
 - Configs do workspace: `.vscode/settings.json`
   - `editor.formatOnSave=true`, `files.trimTrailingWhitespace=true`, `files.insertFinalNewline=true`
@@ -53,10 +62,18 @@ Stack enxuta para “codar como Replit” no VS Code, com Codex CLI + MCP essenc
   - `Codex: MCP status` e `Codex: Abrir chat`
 - Instalar extensões:
   - VS Code UI (Extensions) ou CLI: `code --install-extension <publisher.id>`
+  - Instalar Claude Code via Makefile: `make code-install-claude`
 
 ## Dev Container
 - Base Node 20 com `common-utils`
 - PostCreate: `.devcontainer/setup.sh` instala navegadores Playwright
+
+## Assistant (opcional, separado)
+- O assistant não faz mais parte do DevLoop padrão (VS Code + Node).
+- DevContainer padrão é “enxuto” (não instala libs de áudio). Para usar o assistant:
+  - Terminal: `make assistant-check` e `make assistant-dev`
+  - Painel opcional: abra `docs/painel_assistant.html`
+  - DevContainer com áudio: use o container alternativo em `.devcontainer.assistant/`
 
 ## Scripts úteis
 - `npm run codex:plan` — plano granular (dry‑run) usando Codex do repo
